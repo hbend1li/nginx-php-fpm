@@ -31,7 +31,7 @@ RUN mkdir -p /srv/sqlite \
 # ============
 # Install build dependencies for docker-gen
 
-RUN apk add --update --no-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/community" \
+RUN apk add --no-cache \
 ca-certificates \
 openrc \
 openssh \
