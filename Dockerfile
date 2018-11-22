@@ -19,13 +19,6 @@ ENV PHP_DISPLAY_STARTUP_ERRORS="On"
 ENV PHP_ERROR_REPORTING="E_COMPILE_ERROR\|E_RECOVERABLE_ERROR\|E_ERROR\|E_CORE_ERROR"
 ENV PHP_CGI_FIX_PATHINFO=0
 
-RUN mkdir -p /srv/sqlite && \
-    mkdir -p /srv/www  && \
-    echo "<?php phpinfo(); ?>">/srv/www/phpinfo.php && \
-    wget https://github.com/vrana/adminer/releases/download/v4.6.3/adminer-4.6.3-mysql-en.php -O /srv/www/adminer.php && \
-    adduser -D -g ${PHP_NGINX_USER} ${PHP_NGINX_GROUP} && \
-    chown -R ${PHP_NGINX_USER}:${PHP_NGINX_GROUP} /srv
-
 # ============
 #  NGINX PHP 
 # ============
@@ -123,9 +116,21 @@ RUN echo "cgi.fix_pathinfo=${PHP_CGI_FIX_PATHINFO}" > ${PHP_VARS} &&\
         -e "s/^;clear_env = no$/clear_env = no/" \
         /etc/php7/php-fpm.d/www.conf
 
+RUN mkdir -p /srv/sqlite && \
+    mkdir -p /srv/www  && \
+    wget https://github.com/vrana/adminer/releases/download/v4.6.3/adminer-4.6.3-mysql-en.php -O /srv/www/adminer.php && \
+    echo "<?php phpinfo(); ?>">/srv/www/phpinfo.php && \
+    adduser -D -g ${PHP_NGINX_USER} ${PHP_NGINX_GROUP} && \
+    chown -R ${PHP_NGINX_USER}:${PHP_NGINX_GROUP} /srv
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
 RUN rc-update add nginx default && \
     rc-update add php-fpm7 default
+
 
 WORKDIR /srv
 EXPOSE 80
 EXPOSE 443
+
+CMD ["php-fpm7", "nginx"]
