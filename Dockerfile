@@ -1,19 +1,17 @@
 FROM  alpine
 MAINTAINER Hamza BENDALI BRAHAM [ hbendali@ya.ru ]
 
-ENV UID                     100
-ENV GID                     101
-ENV MEMORY_LIMIT            256M
-ENV MAX_EXECUTION_TIME      60
-ENV UPLOAD_MAX_FILESIZE     64M
-ENV MAX_FILE_UPLOADS        20
-ENV POST_MAX_SIZE           64M
-ENV MAX_INPUT_VARS          4000
-ENV DATE_TIMEZONE           Asia/Shanghai
-ENV PM_MAX_CHILDREN         6
-ENV PM_START_SERVERS        4
-ENV PM_MIN_SPARE_SERVERS    2
-ENV PM_MAX_SPARE_SERVERS    6
+ENV PHP_FPM_USER                www
+ENV PHP_FPM_GROUP               www
+ENV PHP_FPM_LISTEN_MODE         0660
+ENV PHP_MEMORY_LIMIT            512M
+ENV PHP_MAX_UPLOAD              50M
+ENV PHP_MAX_FILE_UPLOAD         200
+ENV PHP_MAX_POST                100M
+ENV PHP_DISPLAY_ERRORS          On
+ENV PHP_DISPLAY_STARTUP_ERRORS	On
+ENV PHP_ERROR_REPORTING         "E_COMPILE_ERROR\|E_RECOVERABLE_ERROR\|E_ERROR\|E_CORE_ERROR"
+ENV PHP_CGI_FIX_PATHINFO        0
 
 # ====================
 #  Install NGINX PHP 
@@ -22,20 +20,14 @@ ENV PM_MAX_SPARE_SERVERS    6
 RUN set -ex && \
     apk add --no-cache \
     ca-certificates \
-    #openrc \
     openssh \
-    openssl \
-    #yaml \
-    #pcre \
-    #libmemcached-libs \
+    yaml \
+    pcre \
+    libmemcached-libs \
     zlib \
     curl \
-    #gcc \
-    #git \
-    #make \
-    #musl-dev \
     sqlite \
-    lighttpd \
+    nginx \
     php7 \
     php7-apcu \
     php7-bcmath \
@@ -75,19 +67,17 @@ RUN set -ex && \
     php7-xmlrpc \
     php7-zip
 
-RUN mkdir -p /srv/sqlite /srv/www /var/lib/lighttpd/cache/compress /srv/www/d
+RUN mkdir -p /srv/www/d
 RUN adduser -D -g www www
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh
-COPY lighttpd.conf /etc/lighttpd/lighttpd.conf
-COPY mod_fastcgi.conf /etc/lighttpd/mod_fastcgi.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY www/ /srv/www/
-RUN  chown -R www:www /srv /var/lib/lighttpd/cache/compress
+RUN  chown -R www:www /var/lib/nginx/html /srv 
 
 WORKDIR /srv
-#VOLUME ["/srv/sqlite"]
-#VOLUME ["/srv/www"]
+VOLUME ["/srv/www"]
 EXPOSE 80
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
-CMD php-fpm7 -D && lighttpd -D -f /etc/lighttpd/lighttpd.conf
+CMD php-fpm7 && nginx -g 'daemon off;'
