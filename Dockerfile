@@ -67,17 +67,20 @@ RUN set -ex && \
     php7-xmlrpc \
     php7-zip
 
-RUN mkdir -p /srv/www/d
-RUN adduser -D -g www www
+RUN apk add tzdata
+
+RUN mkdir -p /srv/docker /srv/www
+RUN adduser -D -g 'www' www
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY docker/ /srv/docker/
 COPY www/ /srv/www/
-RUN  chown -R www:www /var/lib/nginx/html /srv 
+RUN  chown -R www:www /var/lib/nginx /srv 
 
 WORKDIR /srv
 VOLUME ["/srv/www"]
 EXPOSE 80
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
-CMD php-fpm7 && nginx -g 'daemon off;'
+CMD php-fpm7 -D && nginx -g 'daemon off;'
