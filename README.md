@@ -1,4 +1,3 @@
-[![pipeline status](https://gitlab.com/hbendali/nginx-php-fpm/badges/master/pipeline.svg)](https://gitlab.com/hbendali/nginx-php-fpm/commits/master)
 ![docker hub](https://img.shields.io/docker/pulls/hbendali/nginx-php-fpm.svg?style=flat-square)
 ![docker hub](https://img.shields.io/docker/stars/hbendali/nginx-php-fpm.svg?style=flat-square)
 
