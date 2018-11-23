@@ -12,7 +12,7 @@ ENV PHP_DISPLAY_ERRORS          On
 ENV PHP_DISPLAY_STARTUP_ERRORS	On
 ENV PHP_ERROR_REPORTING         "E_COMPILE_ERROR\|E_RECOVERABLE_ERROR\|E_ERROR\|E_CORE_ERROR"
 ENV PHP_CGI_FIX_PATHINFO        0
-
+ENV TIMEZONE                    "Africa/Algiers"
 # ====================
 #  Install NGINX PHP 
 # ====================
@@ -26,6 +26,7 @@ RUN set -ex && \
     libmemcached-libs \
     zlib \
     curl \
+    tzdata \
     sqlite \
     nginx \
     php7 \
@@ -66,8 +67,7 @@ RUN set -ex && \
     php7-xmlreader \
     php7-xmlrpc \
     php7-zip
-
-RUN apk add tzdata
+    
 
 RUN mkdir -p /srv/docker /srv/www
 RUN adduser -D -g 'www' www

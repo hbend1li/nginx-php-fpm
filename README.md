@@ -1,7 +1,7 @@
 ![docker hub](https://img.shields.io/docker/pulls/hbendali/nginx-php-fpm.svg?style=flat-square)
 ![docker hub](https://img.shields.io/docker/stars/hbendali/nginx-php-fpm.svg?style=flat-square)
 
-## Overview
+### Overview
 This is a Dockerfile/image to build a container for nginx and php-fpm.
 
 If you have improvements or suggestions please open an issue or pull request on the GitHub project page.
@@ -9,9 +9,9 @@ If you have improvements or suggestions please open an issue or pull request on 
 ### Versioning
 | Docker Tag | Git Release | Nginx Version | PHP Version | Alpine Version |
 |-----|-------|-----|--------|--------|
-| latest/1.0.0 | Master Branch |1.14.0 | 7.2.10 | 3.8 |
+| latest | Master Branch |1.14.1 | 7.2.10 | 3.8 |
 
-## Quick Start
+### Quick Start
 To pull from docker hub:
 ```
 docker pull hbendali/nginx-php-fpm
